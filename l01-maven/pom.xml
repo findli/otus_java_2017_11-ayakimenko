@@ -44,7 +44,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>ru.otus.l011.Main</mainClass>
+                            <mainClass>ru.otus.l01.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -55,7 +55,7 @@
                 <version>3.0.0</version>
                 <executions>
                     <execution>
-                        <id>my-maven-assembly-plugin</id>
+                        <id>maven-assembly-plugin</id>
                         <phase>package</phase>
                         <goals>
                             <goal>single</goal>
