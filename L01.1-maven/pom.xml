@@ -9,15 +9,14 @@
         <artifactId>otus_2017_11_parent</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
-    <artifactId>l01-maven</artifactId>
+    <artifactId>L01.1-maven</artifactId>
     <packaging>jar</packaging>
 
-
-    <name>l01-maven</name>
+    <name>L01.1-maven</name>
 
     <developers>
         <developer>
-            <name>artem</name>
+            <name>ayakimenko</name>
         </developer>
     </developers>
 
@@ -44,7 +43,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>ru.otus.l01.Main</mainClass>
+                            <mainClass>ru.otus.L011.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -69,7 +68,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>ru.otus.l01.Main</mainClass>
+                            <mainClass>ru.otus.L011.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -97,7 +96,7 @@
                         <option>-dontshrink</option>
                         <option>-dontnote</option>
                         <option>-dontwarn</option>
-                        <option>-keep class ru.otus.l01.Main { *; }</option>
+                        <option>-keep class ru.otus.L011.Main { *; }</option>
                     </options>
                     <libs>
                         <lib>${java.home}/lib/rt.jar</lib>

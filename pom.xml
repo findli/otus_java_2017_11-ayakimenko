@@ -10,7 +10,9 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>l01-maven</module>
+        <module>L01.1-maven</module>
+        <module>L02.1-memory</module>
+        <module>L03.1-generics</module>
     </modules>
 
     <properties>
