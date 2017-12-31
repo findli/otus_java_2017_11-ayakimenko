@@ -2,7 +2,6 @@ package ru.otus.L031;
 
 
 import java.util.*;
-import java.util.function.Consumer;
 
 /**
  * Created by abyakimenko on 04.12.2017.
@@ -17,7 +16,7 @@ public class CustomList<T> implements List<T> {
 
 
     public CustomList() {
-        data = (T[]) new Object[DEFAULT_SIZE];
+        data = new Object[DEFAULT_SIZE];
     }
 
     public CustomList(int initSize) {
@@ -64,26 +63,6 @@ public class CustomList<T> implements List<T> {
     }
 
     @Override
-    public boolean addAll(int index, Collection c) {
-        throw new UnsupportedOperationException("addAll from position");
-    }
-
-    @Override
-    public void sort(Comparator<? super T> collection) {
-        throw new UnsupportedOperationException("sort");
-    }
-
-    private void ensureCapacity(int minCapacity) {
-
-        if (data.length < minCapacity) {
-            // simple increase current capacity by 1.5 + 1
-            int newCapacity = minCapacity + (minCapacity >> 1);
-            data = Arrays.copyOf(data, newCapacity);
-        }
-    }
-
-
-    @Override
     public int size() {
         return size;
     }
@@ -103,33 +82,6 @@ public class CustomList<T> implements List<T> {
         return new CustomIterator();
     }
 
-    /////////////
-    private class CustomIterator implements Iterator<T> {
-
-        @Override
-        public boolean hasNext() {
-            return false;
-        }
-
-        @Override
-        public T next() {
-            return null;
-        }
-
-        @Override
-        public void remove() {
-
-        }
-
-        @Override
-        public void forEachRemaining(Consumer<? super T> action) {
-
-        }
-    }
-
-    /////////////
-
-
     @Override
     public Object[] toArray() {
         return Arrays.copyOf(data, size);
@@ -141,13 +93,29 @@ public class CustomList<T> implements List<T> {
         checkIndexRange(index);
         return (T) data[index];
     }
-    // --------------------------------------
+
+    @Override
+    public T remove(int index) {
+
+        checkIndexRange(index);
+
+        T removedElement = get(index);
+
+        int movePos = size - index - 1;
+        if (movePos > 0) {
+            System.arraycopy(data, index + 1, data, index, movePos);
+        }
+        data[--size] = null;
+
+        return removedElement;
+    }
+
+    // ----------------------------- NOT MPLEMENTED YET ---------------------------- //
 
     @Override
     public boolean remove(Object o) {
         throw new UnsupportedOperationException("remove");
     }
-
 
     @Override
     public void clear() {
@@ -157,11 +125,6 @@ public class CustomList<T> implements List<T> {
     @Override
     public T set(int index, Object element) {
         throw new UnsupportedOperationException("set");
-    }
-
-    @Override
-    public T remove(int index) {
-        throw new UnsupportedOperationException("remove by index");
     }
 
     @Override
@@ -205,7 +168,54 @@ public class CustomList<T> implements List<T> {
     }
 
     @Override
+    public boolean addAll(int index, Collection c) {
+        throw new UnsupportedOperationException("addAll from position");
+    }
+
+    @Override
+    public void sort(Comparator<? super T> collection) {
+        throw new UnsupportedOperationException("sort");
+    }
+    
+    // ----------------------------- NOT MPLEMENTED YET ---------------------------- //
+
+    @Override
     public Object[] toArray(Object[] a) {
         return new Object[0];
+    }
+
+    private class CustomIterator implements Iterator<T> {
+
+        // next element's index
+        private int cursor;
+
+        @Override
+        public boolean hasNext() {
+            return cursor < size;
+        }
+
+        @Override
+        public T next() {
+
+            if (hasNext()) {
+                return (T) CustomList.this.data[cursor++];
+            }
+            throw new NoSuchElementException();
+        }
+
+        @Override
+        public void remove() {
+            int removeIndex = cursor - 1;
+            CustomList.this.remove(removeIndex);
+        }
+    }
+
+    private void ensureCapacity(int minCapacity) {
+
+        if (data.length < minCapacity) {
+            // simple increase current capacity by 2
+            int newCapacity = minCapacity + (minCapacity >> 1);
+            data = Arrays.copyOf(data, newCapacity);
+        }
     }
 }

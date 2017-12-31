@@ -2,7 +2,7 @@ package ru.otus.L031;
 
 import org.junit.Test;
 
-import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.*;
@@ -48,11 +48,30 @@ public class CustomListTest {
         srcList.addAll(testList2);
 
         assertEquals(srcList.size(), 30);
-
-        List<String> actual = Arrays.asList("foo", "bar", "baz");
-        assertThat(actual, hasItems("baz", "foo"));
-        assertThat(srcList, hasItems("string_17"));
+        assertThat(srcList, hasItems("string_1","string_11", "string_17", "string_12", "string_19")); //,"string_12","string_19","string_20"
     }
+
+    @Test
+    public void should_remove_by_index() {
+
+        List<String> srcList = generateList(10);
+        assertThat(srcList.get(7), equalTo("string_7"));
+
+        Iterator<String> iterator = srcList.iterator();
+        iterator.next();
+        iterator.next();
+        iterator.next();
+        iterator.remove();
+
+        assertThat(srcList.get(1), equalTo("string_1"));
+        assertThat(srcList.get(2), equalTo("string_3"));
+        assertThat(srcList.get(8), equalTo("string_9"));
+    }
+
+    @Test
+    public void should_remove_by_ref() {
+    }
+
 
     @Test
     public void addAll1() {
