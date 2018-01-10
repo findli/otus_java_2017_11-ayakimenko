@@ -2,6 +2,7 @@ package ru.otus.L031;
 
 
 import java.util.*;
+import java.util.function.Predicate;
 
 /**
  * Created by abyakimenko on 04.12.2017.
@@ -29,9 +30,6 @@ public class CustomList<T> implements List<T> {
             throw new IllegalArgumentException("Wrong init size=" + initSize + "Size must be greater or equal zero.");
         }
     }
-
-
-    // --------------------------------------
 
     @Override
     public boolean add(T element) {
@@ -73,11 +71,6 @@ public class CustomList<T> implements List<T> {
     }
 
     @Override
-    public boolean contains(Object o) {
-        return false;
-    }
-
-    @Override
     public Iterator iterator() {
         return new CustomIterator();
     }
@@ -91,60 +84,116 @@ public class CustomList<T> implements List<T> {
     @SuppressWarnings("unchecked")
     public T get(int index) {
         checkIndexRange(index);
-        return (T) data[index];
+        return getElementByIndex(index);
     }
 
     @Override
     public T remove(int index) {
 
         checkIndexRange(index);
-
         T removedElement = get(index);
-
-        int movePos = size - index - 1;
-        if (movePos > 0) {
-            System.arraycopy(data, index + 1, data, index, movePos);
-        }
-        data[--size] = null;
-
+        removeInternal(index);
         return removedElement;
     }
 
-    // ----------------------------- NOT MPLEMENTED YET ---------------------------- //
-
     @Override
-    public boolean remove(Object o) {
-        throw new UnsupportedOperationException("remove");
+    public boolean remove(Object object) {
+
+        if (object == null) {
+            return removeIteration(Objects::isNull);
+        } else {
+            return removeIteration(object::equals);
+        }
     }
 
     @Override
-    public void clear() {
-        throw new UnsupportedOperationException("clear");
+    public Object[] toArray(Object[] a) {
+        return new Object[0];
+    }
+
+    @Override
+    public boolean contains(Object object) {
+        return indexOf(object) > -1;
+    }
+
+    @Override
+    public int indexOf(Object object) {
+
+        if (object == null) {
+            for (int i = 0; i < size; i++) {
+                if (data[i] == null) {
+                    return i;
+                }
+            }
+        } else {
+            for (int i = 0; i < size; i++) {
+                if (object.equals(data[i])) {
+                    return i;
+                }
+            }
+        }
+
+        return -1;
     }
 
     @Override
     public T set(int index, Object element) {
-        throw new UnsupportedOperationException("set");
+
+        checkIndexRange(index);
+        T oldElement = getElementByIndex(index);
+        data[index] = element;
+
+        return oldElement;
     }
 
     @Override
-    public int indexOf(Object o) {
-        throw new UnsupportedOperationException("indexOf");
-    }
-
-    @Override
-    public int lastIndexOf(Object o) {
-        throw new UnsupportedOperationException("lastIndexOf");
-    }
-
-    @Override
+    @SuppressWarnings("unchecked")
     public ListIterator listIterator() {
-        throw new UnsupportedOperationException("listIterator empty");
+        return new CustomListIterator(0);
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public ListIterator listIterator(int index) {
-        throw new UnsupportedOperationException("listIterator with index");
+        return new CustomListIterator(index);
+    }
+
+    @Override
+    public int lastIndexOf(Object object) {
+
+        if (object == null) {
+            for (int i = size - 1; i >= 0; i--) {
+                if (data[i] == null) {
+                    return i;
+                }
+            }
+        } else {
+
+            for (int i = size - 1; i >= 0; i--) {
+                if (object.equals(data[i])) {
+                    return i;
+                }
+            }
+        }
+
+        return -1;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public void sort(Comparator<? super T> comparator) {
+        Arrays.sort((T[]) data, 0, size, comparator);
+    }
+
+
+    // ----------------------------- NOT MPLEMENTED YET ---------------------------- //
+
+    @Override
+    public void clear() {
+        for (int i = size - 1; i >= 0; i--) {
+            data[i] = null;
+        }
+        size = 0;
     }
 
     @Override
@@ -172,22 +221,14 @@ public class CustomList<T> implements List<T> {
         throw new UnsupportedOperationException("addAll from position");
     }
 
-    @Override
-    public void sort(Comparator<? super T> collection) {
-        throw new UnsupportedOperationException("sort");
-    }
-    
     // ----------------------------- NOT MPLEMENTED YET ---------------------------- //
 
-    @Override
-    public Object[] toArray(Object[] a) {
-        return new Object[0];
-    }
 
+    // PRIVATE MEMBERS
     private class CustomIterator implements Iterator<T> {
 
         // next element's index
-        private int cursor;
+        int cursor;
 
         @Override
         public boolean hasNext() {
@@ -195,6 +236,7 @@ public class CustomList<T> implements List<T> {
         }
 
         @Override
+        @SuppressWarnings("unchecked")
         public T next() {
 
             if (hasNext()) {
@@ -210,6 +252,54 @@ public class CustomList<T> implements List<T> {
         }
     }
 
+    private class CustomListIterator extends CustomIterator implements ListIterator<T> {
+
+        CustomListIterator(int index) {
+            super();
+            cursor = index;
+        }
+
+        @Override
+        public boolean hasPrevious() {
+            return cursor > 0;
+        }
+
+        @Override
+        @SuppressWarnings("unchecked")
+        public T previous() {
+
+            int i = cursor - 1;
+            if (i < 0) {
+                throw new NoSuchElementException();
+            }
+
+            return (T) CustomList.this.data[i];
+        }
+
+        @Override
+        public int nextIndex() {
+            return cursor;
+        }
+
+        @Override
+        public int previousIndex() {
+            return cursor - 1;
+        }
+
+        @Override
+        public void set(T element) {
+            CustomList.this.set(cursor, element);
+        }
+
+        @Override
+        public void add(T element) {
+            int i = cursor;
+            CustomList.this.add(i, element);
+            cursor = i + 1;
+        }
+    }
+
+
     private void ensureCapacity(int minCapacity) {
 
         if (data.length < minCapacity) {
@@ -217,5 +307,30 @@ public class CustomList<T> implements List<T> {
             int newCapacity = minCapacity + (minCapacity >> 1);
             data = Arrays.copyOf(data, newCapacity);
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    private boolean removeIteration(Predicate predicate) {
+        for (int i = 0; i < size; i++) {
+            if (predicate.test(data[i])) {
+                removeInternal(i);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void removeInternal(int index) {
+
+        int movePos = size - index - 1;
+        if (movePos > 0) {
+            System.arraycopy(data, index + 1, data, index, movePos);
+        }
+        data[--size] = null;
+    }
+
+    @SuppressWarnings("unchecked")
+    private T getElementByIndex(int index) {
+        return (T) data[index];
     }
 }
