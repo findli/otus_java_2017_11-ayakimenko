@@ -19,33 +19,16 @@ public class Main {
 
         System.out.println("pid: " + ManagementFactory.getRuntimeMXBean().getName());
 
-        int size = 20_000_000;
+        MemoryMeter memoryMeter = new MemoryMeter();
+        memoryMeter.setUp();
 
-        Runtime runtime = Runtime.getRuntime();
-        
-        System.out.println("Starting the loop");
-        while (true) {
-            Object[] array = new Object[size];
-            System.out.println("New array of size: " + array.length + " created");
-            for (int i = 0; i < size; i++) {
+        memoryMeter.measure(Object::new, "Object");
+        memoryMeter.clean();
 
-                //array[i] = new Object();
-                array[i] = new String(""); //String pool
-                //array[i] = new String(new char[0]); //without String pool
-                //array[i] = new MyClass();
-            }
+        memoryMeter.measure(String::new, "String with pool");
+        memoryMeter.clean();
 
-            long mem = runtime.totalMemory() - runtime.freeMemory();
-            System.gc();
-            System.out.println("Created " + size + " objects.");
-            System.out.println("mem = " + mem / size);
-
-            Thread.sleep(100); //wait for 1 sec
-        }
-    }
-
-    private static class MyClass {
-        private int i = 0;
-        private long l = 1;
+        memoryMeter.measure(() -> new String(new char[0]), "Empty String pool free");
+        memoryMeter.clean();
     }
 }
