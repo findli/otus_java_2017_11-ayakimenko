@@ -36,13 +36,29 @@ public class CustomListTest {
 
     @Test
     public void shouldAddOneElementToPosition() {
+        List<String> srcList = generateStringList(10);
+
+        srcList.add(3, "NEW_ITEM_3");
+        assertThat(srcList.size(), is(11));
+        assertThat(srcList.get(3), is("NEW_ITEM_3"));
+        assertThat(srcList.get(4), is("string_3"));
+        assertThat(srcList.get(10), is("string_9"));
+
+        srcList.add(7, "NEW_ITEM_77");
+        assertThat(srcList.size(), is(12));
+        assertThat(srcList.get(7), is("NEW_ITEM_77"));
+        assertThat(srcList.get(8), is("string_6"));
+        assertThat(srcList.get(2), is("string_2"));
+
+        assertThat(srcList.get(0), is("string_0"));
+        assertThat(srcList.get(11), is("string_9"));
     }
 
     @Test
     public void shouldAddAllElements() {
 
-        List<String> srcList = generateList(10);
-        List<String> testList2 = generateList(20);
+        List<String> srcList = generateStringList(10);
+        List<String> testList2 = generateStringList(20);
 
         srcList.addAll(testList2);
         assertEquals(30, srcList.size());
@@ -57,7 +73,7 @@ public class CustomListTest {
     @Test
     public void shouldRemoveByIndex() {
 
-        List<String> srcList = generateList(10);
+        List<String> srcList = generateStringList(10);
         assertThat(srcList.get(7), equalTo("string_7"));
 
         Iterator<String> iterator = srcList.iterator();
@@ -74,7 +90,7 @@ public class CustomListTest {
     @Test
     public void shouldRemoveByRef() {
 
-        List<String> srcList = generateList(5);
+        List<String> srcList = generateStringList(5);
         srcList.remove("string_2");
         assertThat(srcList.get(2), equalTo("string_3"));
         srcList.remove("string_3");
@@ -146,7 +162,7 @@ public class CustomListTest {
         return testList;
     }
 
-    private CustomList<String> generateList(int size) {
+    private CustomList<String> generateStringList(int size) {
 
         CustomList<String> testList = new CustomList<>();
         for (int i = 0; i < size; i++) {

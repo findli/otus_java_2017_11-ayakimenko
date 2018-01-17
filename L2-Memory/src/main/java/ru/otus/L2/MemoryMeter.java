@@ -5,6 +5,15 @@ import java.util.function.Supplier;
 
 /**
  * Created by abyakimenko on 29.11.2017.
+ *
+ * For 64 bit VMs there are options:
+
+    1.Using compressed pointers via -XX:+UseCompressedOops (enabled by default on Java 6)
+    In that case: object headers will be 12 bytes, array headers will be 16 bytes (last 4 byte for size of array)
+
+    2.Not using compressed pointers via -XX:-UseCompressedOops
+
+    In that case: object headers will be 16 bytes, array headers will be 20 bytes (last 4 byte for size of array)
  */
 public class MemoryMeter {
 

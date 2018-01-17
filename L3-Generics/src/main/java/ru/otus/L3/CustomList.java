@@ -41,6 +41,10 @@ public class CustomList<T> implements List<T> {
     @Override
     public void add(int index, Object element) {
         checkIndexRange(index);
+        ensureCapacity(size + 1);
+        System.arraycopy(data, index, data, index + 1, size - index);
+        data[index] = element;
+        ++size;
     }
 
     private void checkIndexRange(int index) {
@@ -72,7 +76,7 @@ public class CustomList<T> implements List<T> {
 
     @Override
     public Iterator iterator() {
-        return new CustomIterator();
+        return new CustomListIterator();
     }
 
     @Override
@@ -202,22 +206,22 @@ public class CustomList<T> implements List<T> {
     }
 
     @Override
-    public boolean retainAll(Collection c) {
+    public boolean retainAll(Collection collection) {
         throw new UnsupportedOperationException("retainAll");
     }
 
     @Override
-    public boolean removeAll(Collection c) {
+    public boolean removeAll(Collection collection) {
         throw new UnsupportedOperationException("removeAll");
     }
 
     @Override
-    public boolean containsAll(Collection c) {
+    public boolean containsAll(Collection collection) {
         throw new UnsupportedOperationException("containsAll");
     }
 
     @Override
-    public boolean addAll(int index, Collection c) {
+    public boolean addAll(int index, Collection collection) {
         throw new UnsupportedOperationException("addAll from position");
     }
 
@@ -225,10 +229,18 @@ public class CustomList<T> implements List<T> {
 
 
     // PRIVATE MEMBERS
-    private class CustomIterator implements Iterator<T> {
+
+    private class CustomListIterator implements ListIterator<T> {
 
         // next element's index
         int cursor;
+
+        public CustomListIterator() {
+        }
+
+        CustomListIterator(int index) {
+            cursor = index;
+        }
 
         @Override
         public boolean hasNext() {
@@ -249,14 +261,6 @@ public class CustomList<T> implements List<T> {
         public void remove() {
             int removeIndex = cursor - 1;
             CustomList.this.remove(removeIndex);
-        }
-    }
-
-    private class CustomListIterator extends CustomIterator implements ListIterator<T> {
-
-        CustomListIterator(int index) {
-            super();
-            cursor = index;
         }
 
         @Override
@@ -298,7 +302,6 @@ public class CustomList<T> implements List<T> {
             cursor = i + 1;
         }
     }
-
 
     private void ensureCapacity(int minCapacity) {
 

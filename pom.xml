@@ -13,10 +13,10 @@
         <module>L1-Maven</module>
         <module>L2-Memory</module>
         <module>L3-Generics</module>
-        <module>L6-ATM</module>
-        <module>L7-ATM.Department</module>
         <module>L4-GC</module>
         <module>L5-Annotations</module>
+        <module>L6-ATM</module>
+        <module>L7-ATM.Department</module>
     </modules>
 
     <properties>
