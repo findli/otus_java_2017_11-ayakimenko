@@ -11,5 +11,26 @@
 
     <artifactId>L5-Annotations</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.reflections</groupId>
+            <artifactId>reflections</artifactId>
+            <version>RELEASE</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>ru.otus.L5.CustomTestStarter</mainClass>
+                    <classpathScope>test</classpathScope>
+                </configuration>
+            </plugin>
+
+        </plugins>
+    </build>
 
 </project>
