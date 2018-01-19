@@ -21,6 +21,9 @@ public class CustomUnitTestCore {
 
     private static final Logger logger = LoggerFactory.getLogger(CustomUnitTestCore.class);
 
+    private CustomUnitTestCore() {
+    }
+
     public static void runPackageClasses(String packageName) {
         Set<Class<?>> testClasses = ReflectionHelper.getTestClassesByPackageReference(packageName);
         if(testClasses.isEmpty()){
@@ -31,6 +34,7 @@ public class CustomUnitTestCore {
         testClasses.forEach(CustomUnitTestCore::runClassMethods);
     }
 
+    @SuppressWarnings("unchecked")
     public static void runClassMethods(Class targetClass) {
 
         List<Method> afterMethods = ReflectionHelper.getMethodsByAnnotation(targetClass, AfterCustom.class);
@@ -49,11 +53,10 @@ public class CustomUnitTestCore {
                 runMethod(testClassInstance, method);
                 runMethods(testClassInstance, afterMethods);
             } catch (InvocationTargetException ex) {
-                logger.error("", ex);
+                logger.error("Test's failed", ex);
             } catch (IllegalAccessException ex) {
-                logger.error("", ex);
+                logger.error("Test's broken", ex);
             }
-
         });
     }
 
@@ -64,12 +67,12 @@ public class CustomUnitTestCore {
         }
     }
 
-    private static void runMethod(Object instance, Method method)
+    private static void runMethod(Object instance, Method method, Object... params)
             throws InvocationTargetException, IllegalAccessException {
 
         if (Objects.isNull(instance) || Objects.isNull(method)) {
             return;
         }
-        method.invoke(instance, method);
+        method.invoke(instance, params);
     }
 }
