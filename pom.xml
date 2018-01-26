@@ -17,6 +17,7 @@
         <module>L5-Annotations</module>
         <module>L6-ATM</module>
         <module>L7-ATM.Department</module>
+        <module>L8-Serialization</module>
     </modules>
 
     <properties>

@@ -53,7 +53,8 @@ public class Main {
         memoryMeter.measure(() -> new int[10_000], "Int array, 10_000 elements");
         memoryMeter.clean();
 
-        memoryMeter.measure(() -> new int[100_000], "Int array, 100_000 elements");
-        memoryMeter.clean();
+        // Out of memory
+        /*memoryMeter.measure(() -> new int[100_000], "Int array, 100_000 elements");
+        memoryMeter.clean();*/
     }
 }
