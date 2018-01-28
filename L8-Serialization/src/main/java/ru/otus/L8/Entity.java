@@ -2,7 +2,7 @@ package ru.otus.L8;
 
 public class Entity {
 
-    private volatile int id;
+    private int id;
     private String name;
     private Integer count;
     private transient long random;
