@@ -43,6 +43,11 @@ public class AJsonTest {
     @Test
     public void shouldSerializeObject() {
 
+        SimpleEntity simpleEntity = new SimpleEntity(11, 12, 55, 555);
+
+        String result = jsonWriter.toJson(simpleEntity);
+
+
         Entity test1 = new Entity(113, "testEntity");
         test1.setRandom(1234);
 

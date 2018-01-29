@@ -1,9 +1,12 @@
-package ru.otus.L8.ajson.processor;
+package ru.otus.L8.ajson.strategy;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.otus.L8.ajson.ObjectInspector;
 
+import javax.json.Json;
 import javax.json.JsonObjectBuilder;
+import javax.json.JsonValue;
 import java.lang.reflect.Field;
 
 /**
@@ -14,14 +17,17 @@ public class ObjectJsonStrategy implements FieldJsonStrategy {
     private static final Logger logger = LoggerFactory.getLogger(ObjectJsonStrategy.class);
 
     @Override
-    public Object execute(Object object, JsonObjectBuilder builder) {
+    public JsonValue execute(Object object, ObjectInspector inspector) {
 
+        JsonObjectBuilder builder = Json.createObjectBuilder();
         Field[] fields = object.getClass().getDeclaredFields();
+
         for (Field field : fields) {
             boolean accessible = field.isAccessible();
             try {
                 field.setAccessible(true);
-                //builder.add(field.getName(), decomposer.walk(field.get(object)));
+                builder.add(field.getName(), inspector.inspect(field.get(object))
+                );
             } catch (Exception ex) {
                 logger.error(ex.getMessage());
             } finally {
@@ -29,11 +35,11 @@ public class ObjectJsonStrategy implements FieldJsonStrategy {
             }
         }
 
-        return null;
+        return builder.build();
     }
 
     @Override
-    public boolean isSameType(Object object) {
+    public boolean isObjectInstance(Object object) {
         return true;
     }
 }

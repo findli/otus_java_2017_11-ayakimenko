@@ -3,10 +3,7 @@ package ru.otus.L8.ajson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.json.Json;
-import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
-import javax.json.JsonWriter;
+import javax.json.*;
 import java.io.StringWriter;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
@@ -30,20 +27,33 @@ public class AJson {
 
     private static final Logger logger = LoggerFactory.getLogger(AJson.class);
 
-    public String toJson(Object input) {
+    private ObjectInspector objectInspector;
 
-        if (input == null) {
+    public AJson() {
+        objectInspector = new ObjectInspector();
+    }
+
+    public String toJson(Object object) {
+
+        if (object == null) {
             return "null";
         }
 
-        if (isWrapperType(input.getClass()) || input instanceof String) {
-            return input.toString();
+        if (isWrapperType(object.getClass()) || object instanceof String) {
+            return object.toString();
         }
 
         JsonObjectBuilder builder = Json.createObjectBuilder();
-        // JsonObject recursive
-        navigateObjectTree(input, builder, "");
+        JsonValue treeResult = objectInspector.inspect(object);
 
+        // JsonObject -> String
+
+        // НОВЫЙ ВАРИАНТ СО СТРАТЕГИЯМИ и javax
+        String newResult = writeToString((JsonObject) treeResult);
+        System.out.println(newResult);
+        // НОВЫЙ ВАРИАНТ СО СТРАТЕГИЯМИ и javax
+
+        navigateObjectTree(object, builder, "");
         return writeToString(builder.build());
     }
 
@@ -142,37 +152,13 @@ public class AJson {
         }*/
 
         /*for (FieldJsonStrategy command : ProcessorFactory.getProcessors()) {
-            if (command.isSameType(object)) {
+            if (command.isObjectInstance(object)) {
                 return command.execute(object, builder);
             }
         }*/
 
         return null;
     }
-
-
-    // PRIVATE MEMBERS
-    /*private static Object getFieldValue(Object object, Field field) {
-
-        boolean isAccessible = true;
-        try {
-            isAccessible = field.isAccessible();
-            field.setAccessible(true);
-
-            if (field.getType().isAssignableFrom(Integer.class)) {
-                return field.getInt(object);
-            }
-
-            //return field.get(object);
-        } catch (IllegalAccessException e) {
-            logger.error("###getFieldValue Something goes wrong ", e);
-        } finally {
-            if (Objects.nonNull(field) && !isAccessible) {
-                field.setAccessible(false);
-            }
-        }
-        return null;
-    }*/
 
     private static boolean isWrapperType(Class<?> clazz) {
         return WRAPPER_TYPES.contains(clazz);

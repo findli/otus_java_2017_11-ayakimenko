@@ -1,9 +1,6 @@
 package ru.otus.L8.ajson.wrapper;
 
-import ru.otus.L8.ajson.processor.FieldJsonStrategy;
-import ru.otus.L8.ajson.processor.NumericJsonStrategy;
-import ru.otus.L8.ajson.processor.ObjectJsonStrategy;
-import ru.otus.L8.ajson.processor.StringJsonStrategy;
+import ru.otus.L8.ajson.strategy.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,8 +13,11 @@ public class ProcessorFactory {
     private static final List<FieldJsonStrategy> processors = new ArrayList<>();
 
     static {
+//        processors.add(new NullJsonStrategy());
         processors.add(new NumericJsonStrategy());
-        processors.add(new StringJsonStrategy());
+//        processors.add(new BooleanJsonStrategy());
+//        processors.add(new StringJsonStrategy());
+//        processors.add(new IterableJsonStrategy());
         processors.add(new ObjectJsonStrategy());
     }
 

@@ -8,6 +8,7 @@ public class CustomTest {
 
     private BigDecimal decimal;
     private BigInteger integer;
+    //private boolean goodCondition;
     private Entity embeddedEntity;
 
     public CustomTest(Date date, BigDecimal decimal, BigInteger integer) {
