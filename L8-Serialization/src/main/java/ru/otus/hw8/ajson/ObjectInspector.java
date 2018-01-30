@@ -1,7 +1,7 @@
-package ru.otus.L8.ajson;
+package ru.otus.hw8.ajson;
 
-import ru.otus.L8.ajson.strategy.FieldJsonStrategy;
-import ru.otus.L8.ajson.wrapper.ProcessorFactory;
+import ru.otus.hw8.ajson.strategy.FieldJsonStrategy;
+import ru.otus.hw8.ajson.wrapper.ProcessorFactory;
 
 import javax.json.JsonValue;
 

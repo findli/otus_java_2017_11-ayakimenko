@@ -1,25 +1,25 @@
-package ru.otus.L8.experiments;
+package ru.otus.hw8.experiments;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.otus.L8.CustomTest;
-import ru.otus.L8.Entity;
+import ru.otus.hw8.ComplexEntity;
+import ru.otus.hw8.Entity;
 
+import javax.json.Json;
+import javax.json.JsonBuilderFactory;
+import javax.json.JsonObject;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Arrays;
-import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-/**
- * Created by abyakimenko on 26.01.2018.
- */
 public class GsonTest {
 
     private static final Logger logger = LoggerFactory.getLogger(GsonTest.class);
@@ -27,8 +27,6 @@ public class GsonTest {
     public static void main(String[] args) {
 
         Gson gson = new Gson();
-        GsonBuilder gsonBuilder = new GsonBuilder().setPrettyPrinting();
-
         int etra = 44;
         gson.toJson(etra);
         // PRIMITIVES
@@ -57,7 +55,7 @@ public class GsonTest {
         Entity entity = new Entity(113, "testEntity");
         entity.setRandom(1234);
 
-        CustomTest testCustom = new CustomTest(new Date(), BigDecimal.valueOf(12.0), BigInteger.valueOf(111));
+        ComplexEntity testCustom = new ComplexEntity(BigDecimal.valueOf(12.0), BigInteger.valueOf(111));
         System.out.println("testCustom = " + gson.toJson(testCustom));
 
         String json = gson.toJson(entity);
@@ -87,5 +85,26 @@ public class GsonTest {
         System.out.println("arrayString = " + gson.toJson(arrayString));
         System.out.println("bytes = " + gson.toJson(bytes));
         System.out.println("chars = " + gson.toJson(chars));
+
+
+        Map<String, ?> config = new HashMap<>();
+        JsonBuilderFactory factory = Json.createBuilderFactory(config);
+        JsonObject value = factory.createObjectBuilder()
+                .add("firstName", "John")
+                .add("lastName", "Smith")
+                .add("age", 25)
+                .add("address", factory.createObjectBuilder()
+                        .add("streetAddress", "21 2nd Street")
+                        .add("city", "New York")
+                        .add("state", "NY")
+                        .add("postalCode", "10021"))
+                .add("phoneNumber", factory.createArrayBuilder()
+                        .add(factory.createObjectBuilder()
+                                .add("type", "home")
+                                .add("number", "212 555-1234"))
+                        .add(factory.createObjectBuilder()
+                                .add("type", "fax")
+                                .add("number", "646 555-4567")))
+                .build();
     }
 }

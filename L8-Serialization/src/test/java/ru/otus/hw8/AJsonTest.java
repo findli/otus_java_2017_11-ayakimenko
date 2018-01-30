@@ -1,14 +1,13 @@
-package ru.otus.L8;
+package ru.otus.hw8;
 
 import com.google.gson.Gson;
 import org.junit.Before;
 import org.junit.Test;
-import ru.otus.L8.ajson.AJson;
+import ru.otus.hw8.ajson.AJson;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -44,19 +43,16 @@ public class AJsonTest {
     public void shouldSerializeObject() {
 
         SimpleEntity simpleEntity = new SimpleEntity(11, 12, 55, 555);
-
-        String result = jsonWriter.toJson(simpleEntity);
-
-
         Entity test1 = new Entity(113, "testEntity");
         test1.setRandom(1234);
 
+        assertThat(jsonWriter.toJson(simpleEntity), is("{\"id\":11,\"counter\":12,\"count\":55,\"bigInteger\":100500,\"longCount\":88888,\"random\":555,\"doubleRandom\":55.123,\"bigDecimal\":1234.6777,\"bigBool\":true,\"strVal\":\"SHORT STRING\"}"));
         assertThat(gson.toJson(test1), is("{\"id\":113,\"name\":\"testEntity\",\"count\":45}"));
         assertThat(jsonWriter.toJson(test1), is("{\"id\":113,\"name\":\"testEntity\",\"count\":45}"));
         assertThat(jsonWriter.toJson(test1), is("{\"id\":113,\"name\":\"testEntity\",\"count\":45}"));
 
-        CustomTest testCustom = new CustomTest(new Date(), BigDecimal.valueOf(12.0), BigInteger.valueOf(111));
-        assertThat(jsonWriter.toJson(testCustom), is("{\"decimal\":12.0,\"integer\":111,\"embeddedEntity\":{\"id\":111,\"name\":\"embeddedEntity\",\"count\":45}}"));
+        ComplexEntity testCustom = new ComplexEntity(BigDecimal.valueOf(12.0), BigInteger.valueOf(111));
+        assertThat(jsonWriter.toJson(testCustom), is("{\"decimal\":12.0,\"integer\":111,\"complex\":{\"id\":11,\"counter\":12,\"count\":55,\"bigInteger\":100500,\"longCount\":88888,\"random\":555,\"doubleRandom\":55.123,\"bigDecimal\":1234.6777,\"bigBool\":true,\"strVal\":\"SHORT STRING\"},\"embeddedEntity\":{\"id\":111,\"name\":\"embeddedEntity\",\"count\":45}}"));
     }
 
     @Test
@@ -69,6 +65,8 @@ public class AJsonTest {
         byte[] bytes = {1, 2, 3, 4, 5, 6, 7, 8};
         assertThat(jsonWriter.toJson(bytes), is("[1,2,3,4,5,6,7,8]"));
         char[] chars = {'A', 'B', 'C', 4, 5, 6, 7, 8};
+
+        System.out.println(gson.toJson(chars));
         assertThat(jsonWriter.toJson(chars), is("[\"A\",\"B\",\"C\",\"\\u0004\",\"\\u0005\",\"\\u0006\",\"\\u0007\",\"\\b\"]"));
 
 

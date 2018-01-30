@@ -1,13 +1,14 @@
-package ru.otus.L8.ajson.strategy;
+package ru.otus.hw8.ajson.strategy;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.otus.L8.ajson.ObjectInspector;
+import ru.otus.hw8.ajson.ObjectInspector;
 
 import javax.json.Json;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 
 /**
  * Created by abyakimenko on 27.01.2018.
@@ -26,8 +27,9 @@ public class ObjectJsonStrategy implements FieldJsonStrategy {
             boolean accessible = field.isAccessible();
             try {
                 field.setAccessible(true);
-                builder.add(field.getName(), inspector.inspect(field.get(object))
-                );
+                if (!Modifier.isTransient(field.getModifiers())) {
+                    builder.add(field.getName(), inspector.inspect(field.get(object)));
+                }
             } catch (Exception ex) {
                 logger.error(ex.getMessage());
             } finally {

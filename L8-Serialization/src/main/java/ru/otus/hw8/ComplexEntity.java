@@ -1,19 +1,19 @@
-package ru.otus.L8;
+package ru.otus.hw8;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.Date;
 
-public class CustomTest {
+public class ComplexEntity {
 
     private BigDecimal decimal;
     private BigInteger integer;
-    //private boolean goodCondition;
+    private SimpleEntity complex;
     private Entity embeddedEntity;
 
-    public CustomTest(Date date, BigDecimal decimal, BigInteger integer) {
+    public ComplexEntity(BigDecimal decimal, BigInteger integer) {
         this.decimal = decimal;
         this.integer = integer;
+        this.complex = new SimpleEntity(11, 12, 55, 555);
         this.embeddedEntity = new Entity(integer.intValue(), "embeddedEntity");
     }
 
@@ -39,5 +39,13 @@ public class CustomTest {
 
     public void setEmbeddedEntity(Entity embeddedEntity) {
         this.embeddedEntity = embeddedEntity;
+    }
+
+    public SimpleEntity getComplex() {
+        return complex;
+    }
+
+    public void setComplex(SimpleEntity complex) {
+        this.complex = complex;
     }
 }

@@ -1,4 +1,4 @@
-package ru.otus.L8;
+package ru.otus.hw8;
 
 public class Entity {
 
