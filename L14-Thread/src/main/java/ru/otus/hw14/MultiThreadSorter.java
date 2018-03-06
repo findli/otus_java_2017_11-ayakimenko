@@ -11,27 +11,87 @@ import java.util.Arrays;
 public class MultiThreadSorter {
 
     private static final Logger logger = LoggerFactory.getLogger(MultiThreadSorter.class);
-    // apply merge sort approach (or forkjoin)
-    public void sort(int threadsNum, int[] srcArray, int startIndex, int stopIndex) {
 
-        if (threadsNum > 1) {
+    private final int cores = Runtime.getRuntime().availableProcessors();
 
-            final int mid = middlePoint(srcArray, startIndex, stopIndex);
+    public void mergeSort(int[] srcArray, int threadCount) {
 
-            new Thread(() -> sort(threadsNum - 1, srcArray, startIndex, mid)).start();
-            new Thread(() -> sort(threadsNum - 1, srcArray, mid, stopIndex)).start();
+        if (threadCount > 1) {
+
+            int[] left = Arrays.copyOfRange(srcArray, 0, srcArray.length / 2);
+            int[] right = Arrays.copyOfRange(srcArray, srcArray.length / 2, srcArray.length);
+
+            Thread lThread = new Thread(() -> mergeSort(left,  threadCount / 2));
+            Thread rThread = new Thread(() -> mergeSort(right, threadCount / 2));
+            lThread.start();
+            rThread.start();
+
+            try {
+                lThread.join();
+                rThread.join();
+            } catch (InterruptedException ie) {}
+
+            // merge them back together
+            merge(left, right, srcArray);
 
         } else {
-            Arrays.sort(srcArray, startIndex, stopIndex);
+            Arrays.sort(srcArray);
         }
     }
 
-    private int middlePoint(int[] srcArray, int startIndex, int stopIndex) {
+    /**
+     * Сортировка алгоритмом слияния (merge sort)
+     *
+     * @param array
+     */
+    private void mergeSortLinear(int[] array) {
 
-        synchronized (MultiThreadSorter.this) {
-            logger.info(Thread.currentThread().getName());
-            logger.info("startIndex: {}  stopIndex:{}", startIndex, stopIndex);
-            return (stopIndex - startIndex) >> 1;
+        if (array.length >= 2) {
+
+            int middle = array.length / 2;
+            int[] left = Arrays.copyOfRange(array, 0, middle);
+            int[] right = Arrays.copyOfRange(array, middle, array.length);
+
+            mergeSortLinear(left);
+            mergeSortLinear(right);
+
+            // собираем половинки вместе
+            merge(left, right, array);
+        }
+    }
+
+    private void merge(int[] left, int[] right, int[] array) {
+
+        int rightLen = right.length;
+        int leftLen = left.length;
+        int i1 = 0;
+        int i2 = 0;
+
+        for (int i = 0; i < array.length; i++) {
+
+            if (i2 >= rightLen || (i1 < leftLen && left[i1] < right[i2])) {
+                array[i] = left[i1];
+                ++i1;
+            } else {
+                array[i] = right[i2];
+                ++i2;
+            }
         }
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

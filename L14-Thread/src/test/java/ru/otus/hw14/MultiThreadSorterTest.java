@@ -18,7 +18,7 @@ public class MultiThreadSorterTest {
     @Before
     public void setUp() {
 
-        int size = 1000;
+        int size = 10;
         array = new int[size];
         Random random = new Random();
 
@@ -31,9 +31,16 @@ public class MultiThreadSorterTest {
 
     @Test
     public void sort() {
-        sorter.sort(4, array, 0, array.length);
-        assertTrue(array[0] < array[array.length - 1]);
-        assertTrue(array[100] < array[array.length - 46]);
-        assertTrue(array[30] < array[array.length - 300]);
+        sorter.mergeSort(array, 4);
+        assertTrue(isSorted(array));
+    }
+
+    private static boolean isSorted(int[] a) {
+        for (int i = 0; i < a.length - 1; i++) {
+            if (a[i] > a[i + 1]) {
+                return false;
+            }
+        }
+        return true;
     }
 }
