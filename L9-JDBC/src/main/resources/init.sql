@@ -1,0 +1,13 @@
+CREATE DATABASE jdbc
+  CHARACTER SET utf8
+  COLLATE utf8_general_ci;
+
+CREATE TABLE IF NOT EXISTS user_data_set (
+  id     BIGINT(20) NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(255)        DEFAULT '',
+  age    INT(3)              DEFAULT 0,
+  PRIMARY KEY (ID)
+)
+  ENGINE = INNODB
+  DEFAULT CHARSET = utf8;
+

@@ -19,6 +19,7 @@
         <module>L7-ATM.Department</module>
         <module>L8-Serialization</module>
         <module>L14-Thread</module>
+        <module>L9-JDBC</module>
     </modules>
 
     <properties>
