@@ -20,6 +20,7 @@
         <module>L8-Serialization</module>
         <module>L14-Thread</module>
         <module>L9-JDBC</module>
+        <module>L10-Hibernate</module>
     </modules>
 
     <properties>
