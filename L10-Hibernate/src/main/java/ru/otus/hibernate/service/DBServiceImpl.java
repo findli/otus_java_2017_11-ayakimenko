@@ -1,52 +1,89 @@
 package ru.otus.hibernate.service;
 
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import ru.otus.hibernate.dao.UserDataSetDao;
+import ru.otus.hibernate.domain.UserDataSet;
+import ru.otus.hibernate.util.HibernateUtil;
+
+import java.sql.SQLException;
+import java.util.List;
+import java.util.function.Function;
+
 /**
  * Created by abyakimenko on 01.04.2018.
  */
-/*public class DBServiceImpl implements DBService {
+public class DBServiceImpl implements DBService {
+
+    private final SessionFactory sessionFactory;
 
     private static final Logger logger = LoggerFactory.getLogger(DBServiceImpl.class);
-    private final Connection connection;
-    private final UserDataSetDao userDao;
 
     public DBServiceImpl() {
-        connection = ConnectionHelper.getConnection();
-        userDao = new UserDataSetDao(connection);
+        this.sessionFactory = HibernateUtil.createSessionFactory();
     }
 
     @Override
     public void save(UserDataSet user) {
-        userDao.save(user);
-    }
-
-    @Override
-    public UserDataSet load(long id) {
-        return userDao.load(id);
-    }
-
-    @Override
-    public void deleteTables() {
-        userDao.deleteTable();
-    }
-
-    @Override
-    public void createTables() {
-        userDao.createTable();
-    }
-
-    @Override
-    public List<String> getAllTables() {
-        List<String> tablesList = new ArrayList<>();
-        String[] types = {"TABLE"};
-
-        try {
-            ResultSet resultSet = connection.getMetaData().getTables("jdbc", null, "%", types);
-            while (resultSet.next()) {
-                tablesList.add(resultSet.getString("TABLE_NAME"));
-            }
-        } catch (SQLException e) {
-            logger.error("Can't get meta info all tables", e);
+        try (Session session = sessionFactory.openSession()) {
+            UserDataSetDao dao = new UserDataSetDao(session);
+            dao.save(user);
         }
-        return tablesList;
     }
-}*/
+
+    @Override
+    public void save(List<UserDataSet> users) throws SQLException {
+        users.forEach(user -> {
+            try (Session session = sessionFactory.openSession()) {
+                UserDataSetDao dao = new UserDataSetDao(session);
+                dao.save(user);
+            }
+        });
+    }
+
+    @Override
+    public UserDataSet findById(long id) {
+        return runInSession(session -> {
+            UserDataSetDao dao = new UserDataSetDao(session);
+            return dao.findById(id);
+        });
+    }
+
+    @Override
+    public UserDataSet findByName(String name) {
+        return runInSession(session -> {
+            UserDataSetDao dao = new UserDataSetDao(session);
+            return dao.findByName(name);
+        });
+    }
+
+    @Override
+    public String getLocalStatus() {
+        return runInSession(session -> session.getTransaction().getStatus().name());
+    }
+
+    @Override
+    public List<UserDataSet> findAll() {
+        return runInSession(session -> {
+            UserDataSetDao dao = new UserDataSetDao(session);
+            return dao.findAll();
+        });
+    }
+
+    @Override
+    public void close() {
+        HibernateUtil.shutdown();
+    }
+
+    private <R> R runInSession(Function<Session, R> function) {
+        try (Session session = sessionFactory.openSession()) {
+            Transaction transaction = session.beginTransaction();
+            R result = function.apply(session);
+            transaction.commit();
+            return result;
+        }
+    }
+}

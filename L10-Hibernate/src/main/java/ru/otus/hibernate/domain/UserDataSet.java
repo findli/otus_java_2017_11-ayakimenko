@@ -1,6 +1,7 @@
 package ru.otus.hibernate.domain;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -12,6 +13,7 @@ import java.util.Set;
  */
 @NoArgsConstructor
 @Data
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "user")
 public class UserDataSet extends DataSet {

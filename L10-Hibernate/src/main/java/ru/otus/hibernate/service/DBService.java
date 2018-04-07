@@ -9,15 +9,17 @@ import java.util.List;
 /**
  * Created by abyakimenko on 30.03.2018.
  */
-public interface DBService {
+public interface DBService extends AutoCloseable {
 
     void save(UserDataSet user) throws SQLException;
 
-    UserDataSet load(long id);
+    void save(List<UserDataSet> user) throws SQLException;
 
-    void deleteTables();
+    UserDataSet findById(long id);
 
-    void createTables();
+    UserDataSet findByName(String name);
 
-    List<String> getAllTables();
+    String getLocalStatus();
+
+    List<UserDataSet> findAll();
 }

@@ -9,7 +9,7 @@ import javax.persistence.*;
  */
 @Data
 @MappedSuperclass
-public class DataSet {
+class DataSet {
 
     @Id
     @Column(name = "id")
