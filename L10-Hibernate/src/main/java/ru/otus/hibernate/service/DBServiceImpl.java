@@ -75,6 +75,7 @@ public class DBServiceImpl implements DBService {
 
     @Override
     public void close() {
+//        sessionFactory.close();
         HibernateUtil.shutdown();
     }
 

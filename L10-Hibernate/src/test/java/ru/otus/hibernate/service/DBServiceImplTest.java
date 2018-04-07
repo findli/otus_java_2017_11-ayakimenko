@@ -2,7 +2,9 @@ package ru.otus.hibernate.service;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 import ru.otus.hibernate.domain.AddressDataSet;
 import ru.otus.hibernate.domain.PhoneDataSet;
 import ru.otus.hibernate.domain.UserDataSet;
@@ -19,12 +21,13 @@ import static org.junit.Assert.assertThat;
 /**
  * Created by abyakimenko on 07.04.2018.
  */
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class DBServiceImplTest {
 
     private DBService dbService;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         dbService = new DBServiceImpl();
     }
 

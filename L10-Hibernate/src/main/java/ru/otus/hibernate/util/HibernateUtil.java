@@ -42,7 +42,7 @@ public class HibernateUtil {
                 settings.put(HBM2DDL_AUTO, "create");
                 settings.put(ENABLE_LAZY_LOAD_NO_TRANS, "true");
 
-                
+
                 registryBuilder.applySettings(settings);
 
                 registry = registryBuilder.build();
@@ -66,8 +66,10 @@ public class HibernateUtil {
     }
 
     public static void shutdown() {
-        if (registry != null) {
+        if (Objects.nonNull(registry)) {
             StandardServiceRegistryBuilder.destroy(registry);
+            sessionFactory.close();
+            sessionFactory = null;
         }
     }
 }
