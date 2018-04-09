@@ -4,6 +4,7 @@ import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.otus.jdbc.UserDataSet;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -99,11 +100,25 @@ public class ReflectionHelper {
         methods = type.getDeclaredMethods();
 
         for (Method method : methods) {
-            if (method.getAnnotation(annotation) != null) {
+            if (Objects.nonNull(method.getAnnotation(annotation))) {
                 methodsWithAnnotation.add(method);
             }
         }
         return methodsWithAnnotation;
+    }
+
+    public static Annotation getAnnotationFromClass(Class<? extends UserDataSet> clazz,
+                                                Class<? extends Annotation> annotation) {
+        return clazz.getAnnotation(annotation);
+        /*for (Method method : clazz.getDeclaredMethods()) {
+            try {
+                return method.invoke(ann, (Object[]) null);
+            } catch (IllegalAccessException e) {
+                logger.error("###getAnnotationFromClass error:", e);
+            } catch (InvocationTargetException e) {
+                logger.error("###getAnnotationFromClass error:", e);
+            }
+        }*/
     }
 
     public static <T> List<Field> getFieldsWithAnnotation(Class<T> type, Class<? extends Annotation> annotation) {
@@ -131,14 +146,12 @@ public class ReflectionHelper {
         if (Objects.isNull(args)) {
             return new Class[0];
         }
-
         return Arrays.stream(args)
                 .map(Object::getClass).toArray(Class<?>[]::new);
     }
 
     public static Set<Class<?>> getTestClassesByPackageReference(String packageFullRef) {
         Reflections reflections = new Reflections(packageFullRef, new SubTypesScanner(false));
-
         return reflections.getSubTypesOf(Object.class);
     }
 }

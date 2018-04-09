@@ -3,13 +3,18 @@ package ru.otus.jdbc.dao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.otus.jdbc.UserDataSet;
+import ru.otus.jdbc.annotations.OrmColumn;
+import ru.otus.jdbc.annotations.OrmTable;
 import ru.otus.jdbc.executor.Executor;
 import ru.otus.jdbc.executor.TResultHandler;
+import ru.otus.jdbc.utils.ReflectionHelper;
 
+import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by abyakimenko on 01.04.2018.
@@ -22,7 +27,6 @@ public class UserDataSetDao {
             " (id BIGINT(20) NOT NULL AUTO_INCREMENT, `name` VARCHAR(255) DEFAULT '', age INT(3) DEFAULT 0, " +
             " PRIMARY KEY (ID) ) ENGINE = INNODB DEFAULT CHARSET = utf8;";
     private static final String DELETE_TABLE_USER = "DROP TABLE IF EXISTS user_data_set";
-    private static final String SAVE_USER = "INSERT INTO user_data_set (name, age) VALUES ('%s', %d);";
     private static final String FIND_USER_BY_ID = "SELECT * FROM user_data_set WHERE id=";
     private static final String FIND_ALL_USERS = "SELECT * FROM user_data_set";
 
@@ -51,17 +55,54 @@ public class UserDataSetDao {
 
     }
 
-    public void save(UserDataSet user) {
+    private <T extends UserDataSet> String constructInsert(T user, List<Field> fieldList) {
+        // get all fields
+        // get table name
+        final OrmTable tableAnnotation = (OrmTable) ReflectionHelper.getAnnotationFromClass(user.getClass(), OrmTable.class);
 
-        final String sql = String.format(SAVE_USER, user.getName(), user.getAge());
+        if (fieldList.isEmpty()) {
+            logger.error("Entity doesn't have OrmColumns. Entity: {}", user);
+        }
+        if (Objects.isNull(tableAnnotation)) {
+            logger.error("Entity doesn't have OrmTable annotation. Entity: {}", user);
+        }
+
+        // construct sql
+        final StringBuilder sqlBuilder = new StringBuilder("INSERT INTO ");
+        sqlBuilder.append(tableAnnotation.name());
+        sqlBuilder.append("(");
+        for (int i = 0; i < fieldList.size(); i++) {
+            sqlBuilder.append(i == 0 ? fieldList.get(i).getName() : "," + fieldList.get(i).getName());
+        }
+        sqlBuilder.append(") ");
+        sqlBuilder.append(" VALUES ");
+        sqlBuilder.append("( ");
+        for (int i = 0; i < fieldList.size(); i++) {
+            sqlBuilder.append(i == 0 ? "?" : ",?");
+        }
+        sqlBuilder.append(") ");
+
+        return sqlBuilder.toString();
+    }
+
+    public <T extends UserDataSet> void save(T user) {
+
+        List<Field> fieldList = ReflectionHelper.getFieldsWithAnnotation(user.getClass(), OrmColumn.class);
+
+        // execute
         try {
-            executor.executeUpdate(sql);
+            executor.execUpdatePrepared(constructInsert(user, fieldList), statement -> {
+                for (int i = 1; i <= fieldList.size(); i++) {
+                    statement.setObject(i, ReflectionHelper.getFieldValue(user, fieldList.get(i - 1)));
+                }
+                statement.execute();
+            });
             logger.info("New user was created successfully");
         } catch (SQLException e) {
             logger.error("Can't save user data", e);
         }
     }
-
+    
     public List<UserDataSet> findAll() {
 
         List<UserDataSet> list = new ArrayList<>();

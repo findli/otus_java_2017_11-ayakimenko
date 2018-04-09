@@ -1,18 +1,18 @@
 package ru.otus.jdbc.executor;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 
 /**
  * Wrapper for executing queries
- *
+ * <p>
  * Created by abyakimenko on 30.03.2018.
  */
 public class Executor {
 
     private final Connection connection;
-
 
     public Executor(Connection connection) {
         this.connection = connection;
@@ -28,5 +28,16 @@ public class Executor {
         try (Statement stmt = connection.createStatement()) {
             return handler.handle(stmt.executeQuery(sql));
         }
+    }
+
+    public void execUpdatePrepared(String update, ExecuteHandler prepare) throws SQLException {
+        try (PreparedStatement stmt = connection.prepareStatement(update)) {
+            prepare.accept(stmt);
+        }
+    }
+
+    @FunctionalInterface
+    public interface ExecuteHandler {
+        void accept(PreparedStatement statement) throws SQLException;
     }
 }
