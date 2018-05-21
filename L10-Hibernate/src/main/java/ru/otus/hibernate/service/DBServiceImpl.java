@@ -3,15 +3,24 @@ package ru.otus.hibernate.service;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.boot.Metadata;
+import org.hibernate.boot.MetadataSources;
+import org.hibernate.boot.registry.StandardServiceRegistry;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.otus.hibernate.dao.UserDataSetDao;
+import ru.otus.hibernate.domain.AddressDataSet;
+import ru.otus.hibernate.domain.PhoneDataSet;
 import ru.otus.hibernate.domain.UserDataSet;
-import ru.otus.hibernate.util.HibernateUtil;
 
-import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
+
+import static org.hibernate.cfg.AvailableSettings.*;
 
 /**
  * Created by abyakimenko on 01.04.2018.
@@ -19,11 +28,11 @@ import java.util.function.Function;
 public class DBServiceImpl implements DBService {
 
     private final SessionFactory sessionFactory;
-
+    private StandardServiceRegistry registry;
     private static final Logger logger = LoggerFactory.getLogger(DBServiceImpl.class);
 
     public DBServiceImpl() {
-        this.sessionFactory = HibernateUtil.createSessionFactory();
+        this.sessionFactory = createSessionFactory();
     }
 
     @Override
@@ -35,7 +44,7 @@ public class DBServiceImpl implements DBService {
     }
 
     @Override
-    public void save(List<UserDataSet> users) throws SQLException {
+    public void save(List<UserDataSet> users) {
         users.forEach(user -> {
             try (Session session = sessionFactory.openSession()) {
                 UserDataSetDao dao = new UserDataSetDao(session);
@@ -75,8 +84,10 @@ public class DBServiceImpl implements DBService {
 
     @Override
     public void close() {
-//        sessionFactory.close();
-        HibernateUtil.shutdown();
+        if (Objects.nonNull(registry)) {
+            StandardServiceRegistryBuilder.destroy(registry);
+            sessionFactory.close();
+        }
     }
 
     private <R> R runInSession(Function<Session, R> function) {
@@ -86,5 +97,46 @@ public class DBServiceImpl implements DBService {
             transaction.commit();
             return result;
         }
+    }
+
+    public SessionFactory createSessionFactory() {
+        if (Objects.isNull(sessionFactory)) {
+            try {
+
+                // Create registry builder
+                StandardServiceRegistryBuilder registryBuilder = new StandardServiceRegistryBuilder();
+
+                // Hibernate settings equivalent to hibernate.cfg.xml's properties
+                Map<String, String> settings = new HashMap<>();
+                settings.put(DRIVER, "com.mysql.cj.jdbc.Driver");
+                settings.put(URL, "jdbc:mysql://localhost:3306/jdbc?useSSL=false&serverTimezone=UTC");
+                settings.put(USER, "springuser");
+                settings.put(PASS, "springuser");
+                settings.put(DIALECT, "org.hibernate.dialect.MySQL5Dialect");
+                settings.put(SHOW_SQL, "true");
+                settings.put(HBM2DDL_AUTO, "create");
+                settings.put(ENABLE_LAZY_LOAD_NO_TRANS, "true");
+
+
+                registryBuilder.applySettings(settings);
+
+                registry = registryBuilder.build();
+                // add annotated classes
+                MetadataSources sources = new MetadataSources(registry);
+                sources.addAnnotatedClass(UserDataSet.class);
+                sources.addAnnotatedClass(PhoneDataSet.class);
+                sources.addAnnotatedClass(AddressDataSet.class);
+
+                Metadata metadata = sources.getMetadataBuilder().build();
+                // Create SessionFactory
+                return metadata.getSessionFactoryBuilder().build();
+            } catch (Exception e) {
+                logger.error("Error creating hibernate factory", e);
+                if (Objects.nonNull(registry)) {
+                    StandardServiceRegistryBuilder.destroy(registry);
+                }
+            }
+        }
+        return sessionFactory;
     }
 }
