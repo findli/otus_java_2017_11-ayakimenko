@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 import static org.hibernate.cfg.AvailableSettings.*;
@@ -37,20 +38,15 @@ public class DBServiceImpl implements DBService {
 
     @Override
     public void save(UserDataSet user) {
-        try (Session session = sessionFactory.openSession()) {
+        runInSessionModify(session -> {
             UserDataSetDao dao = new UserDataSetDao(session);
             dao.save(user);
-        }
+        });
     }
 
     @Override
     public void save(List<UserDataSet> users) {
-        users.forEach(user -> {
-            try (Session session = sessionFactory.openSession()) {
-                UserDataSetDao dao = new UserDataSetDao(session);
-                dao.save(user);
-            }
-        });
+        users.forEach(this::save);
     }
 
     @Override
@@ -87,6 +83,14 @@ public class DBServiceImpl implements DBService {
         if (Objects.nonNull(registry)) {
             StandardServiceRegistryBuilder.destroy(registry);
             sessionFactory.close();
+        }
+    }
+
+    private void runInSessionModify(Consumer<Session> consumer) {
+        try (Session session = sessionFactory.openSession()) {
+            Transaction transaction = session.beginTransaction();
+            consumer.accept(session);
+            transaction.commit();
         }
     }
 

@@ -31,7 +31,6 @@ public class UserDataSet extends DataSet {
     private Set<PhoneDataSet> phones = new HashSet<>();
 
     public UserDataSet(String name, int age) {
-        this.setId(-1L);
         this.name = name;
         this.age = age;
     }
