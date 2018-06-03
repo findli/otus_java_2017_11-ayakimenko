@@ -14,3 +14,6 @@ private String number;
 Добавить соответствущие датасеты и DAO. 
 
 4.** Поддержать работу из пункта (3) в myORM
+
+По поводу hashCode()/equals(). 
+https://stackoverflow.com/questions/5031614/the-jpa-hashcode-equals-dilemma
