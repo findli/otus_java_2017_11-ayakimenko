@@ -21,8 +21,11 @@ public class GCLogger {
         //Install a GCListener for each bean
         for (GarbageCollectorMXBean gcBean : gcBeans) {
             NotificationEmitter emitter = (NotificationEmitter) gcBean;
-            emitter.addNotificationListener(new GCListener(), null, null);
+            GCListener listener = new GCListener();
+            emitter.addNotificationListener(listener, null, null);
         }
+
+        GCListener.timerStart();
     }
 
     public static void printSummaryInfo() {

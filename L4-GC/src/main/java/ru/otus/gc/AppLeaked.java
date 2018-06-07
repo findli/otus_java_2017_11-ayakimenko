@@ -9,12 +9,12 @@ import java.util.List;
 /**
  * Created by abyakimenko on 31.05.2018.
  */
-class AppLeaked {
+public class AppLeaked {
     private static final Logger logger = LoggerFactory.getLogger(AppLeaked.class);
 
     private List<String> list = new ArrayList<>();
     private final int increase_size = 200_000;
-    private final int decrease_size = 1_000;
+    private final int decrease_size = 100_000;
 
     private AppLeaked() {
     }
@@ -42,6 +42,6 @@ class AppLeaked {
         for (int i = 0; i < decrease_size; i++) {
             list.remove(String.valueOf(i));
         }
-        logger.info("Removed {} objects",decrease_size);
+        logger.info("Removed {} objects",decrease_size);                                                                                                                     
     }
 }

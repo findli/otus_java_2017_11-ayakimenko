@@ -21,6 +21,8 @@
         <module>L14-Thread</module>
         <module>L9-JDBC</module>
         <module>L10-Hibernate</module>
+        <module>L11-Cache</module>
+        <module>L12-Webserver</module>
     </modules>
 
     <properties>

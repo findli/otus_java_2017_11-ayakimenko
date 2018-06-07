@@ -1,13 +1,20 @@
 package ru.otus.gc.monitoring;
 
 import com.sun.management.GarbageCollectionNotificationInfo;
+import lombok.Getter;
+import lombok.Setter;
 
 
 public class GCEventInfo {
 
     private String name;
+    @Getter
     private GenerationType generation;
+    @Getter
     private long duration;
+    @Getter
+    @Setter
+    private long count;
 
     private GCEventInfo() {
     }
@@ -38,16 +45,16 @@ public class GCEventInfo {
         return this;
     }
 
-    GenerationType getGeneration() {
-        return generation;
-    }
-
-    long getDuration() {
-        return duration;
-    }
-
     @Override
     public String toString() {
         return "GenerationType: " + generation + ", GC name = " + name + ", GC duration = " + duration;
+    }
+
+    public String logInfo() {
+        return "GenerationType: " + generation + ", GC name = " + name + ", GC duration = " + duration + ", count = " + count;
+    }
+
+    public void increaseCount() {
+        ++count;
     }
 }

@@ -2,6 +2,7 @@ package ru.otus.gc;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.otus.gc.monitoring.GCListener;
 import ru.otus.gc.monitoring.GCLogger;
 
 import java.lang.management.ManagementFactory;
@@ -22,6 +23,7 @@ public class Main {
         } catch (OutOfMemoryError error) {
             logger.error("OOM has occured!", error);
         } finally {
+            GCListener.timerStop();
             GCLogger.printSummaryInfo();
         }
     }
