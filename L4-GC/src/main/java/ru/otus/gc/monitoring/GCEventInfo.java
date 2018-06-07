@@ -14,7 +14,7 @@ public class GCEventInfo {
     private long duration;
     @Getter
     @Setter
-    private long count;
+    private int count;
 
     private GCEventInfo() {
     }
@@ -54,7 +54,8 @@ public class GCEventInfo {
         return "GenerationType: " + generation + ", GC name = " + name + ", GC duration = " + duration + ", count = " + count;
     }
 
-    public void increaseCount() {
+    public void increaseData(long duration) {
+        this.duration += duration;
         ++count;
     }
 }

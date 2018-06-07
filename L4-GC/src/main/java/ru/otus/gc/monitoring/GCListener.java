@@ -22,7 +22,7 @@ public class GCListener implements NotificationListener {
     private static int youngCollects = 0;
     private static int oldCollects = 0;
     private static long totalDuration = 0L;
-    private static long timeout = 30_000;
+    private static long timeout = 60_000;
     private static Timer timer = new Timer();
     private static Map<GenerationType, GCEventInfo> gcMap = new HashMap<>();
 
@@ -35,16 +35,17 @@ public class GCListener implements NotificationListener {
 
             GCEventInfo eventInfo = GCEventInfo.buildFromNotificationInfo(notificationInfo);
             synchronized (GCListener.class) {
-                totalDuration += eventInfo.getDuration();
+                final long duration = eventInfo.getDuration();
+                totalDuration += duration;
 
                 switch (eventInfo.getGeneration()) {
                     case OLD:
                         ++oldCollects;
-                        gcMap.computeIfAbsent(eventInfo.getGeneration(), count -> eventInfo).increaseCount();
+                        gcMap.computeIfAbsent(eventInfo.getGeneration(), count -> eventInfo).increaseData(duration);
                         break;
                     case YOUNG:
                         ++youngCollects;
-                        gcMap.computeIfAbsent(eventInfo.getGeneration(), count -> eventInfo).increaseCount();
+                        gcMap.computeIfAbsent(eventInfo.getGeneration(), count -> eventInfo).increaseData(duration);
                         break;
                     default:
                         logger.info("Unknown generation type: {}", eventInfo.getGeneration());
@@ -81,7 +82,7 @@ public class GCListener implements NotificationListener {
                 // log info per timeout and clear counter
                 if (!gcMap.isEmpty()) {
                     logger.info("###########################################");
-                    logger.info("Per minute info:");
+                    logger.info("Per timeout ({}) info:", timeout);
                     gcMap.values().forEach(info -> logger.info(info.logInfo()));
                     gcMap.clear();
                     logger.info("###########################################");

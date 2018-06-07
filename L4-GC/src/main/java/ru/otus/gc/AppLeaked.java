@@ -14,7 +14,7 @@ public class AppLeaked {
 
     private List<String> list = new ArrayList<>();
     private final int increase_size = 200_000;
-    private final int decrease_size = 100_000;
+    private final int decrease_size = 5_000;
 
     private AppLeaked() {
     }
