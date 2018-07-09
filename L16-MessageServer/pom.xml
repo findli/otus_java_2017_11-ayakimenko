@@ -9,12 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>L11-Cache</artifactId>
-    <dependencies>
-        <dependency>
-            <groupId>ru.otus</groupId>
-            <artifactId>L10-Hibernate</artifactId>
-            <version>1.0</version>
-        </dependency>
-    </dependencies>
+    <artifactId>L16-MessageServer</artifactId>
+
+
 </project>

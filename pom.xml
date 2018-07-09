@@ -23,6 +23,9 @@
         <module>L10-Hibernate</module>
         <module>L11-Cache</module>
         <module>L12-Webserver</module>
+        <module>L13-DI_Spring</module>
+        <module>L15-MessageSystem</module>
+        <module>L16-MessageServer</module>
     </modules>
 
     <properties>

@@ -22,6 +22,8 @@ public class Main {
 
     public static void main(String... args) throws InterruptedException {
 
+        logger.info("d.shilin".hashCode() + "");
+
         logger.info("pid: {}", ManagementFactory.getRuntimeMXBean().getName());
 
         MemoryMeter memoryMeter = new MemoryMeter();
