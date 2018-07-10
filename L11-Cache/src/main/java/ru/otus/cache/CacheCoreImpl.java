@@ -21,6 +21,10 @@ public class CacheCoreImpl<V> implements CacheCore<V> {
     private final Timer timer = new Timer();
     private final Map<String, CacheElement<V>> elements = new LinkedHashMap<>();
 
+    public CacheCoreImpl() {
+        this(15, 0, 0, true);
+    }
+
     public CacheCoreImpl(int maxElementsInCache, long lifeTime, long idleTime, boolean isEternal) {
         this.maxElementsInCache = maxElementsInCache;
         this.lifeTime = lifeTime;
