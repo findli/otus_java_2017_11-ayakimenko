@@ -15,7 +15,7 @@ import java.util.function.Function;
 
 public class AccountDBServiceImpl implements AccountDBService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(AccountDBServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(AccountDBServiceImpl.class);
 
     private SessionFactory sessionFactory;
     private AccountDao accountDataSetDao;
@@ -55,7 +55,7 @@ public class AccountDBServiceImpl implements AccountDBService {
             transaction.commit();
             return result;
         } catch (Exception e){
-            LOG.error("Transaction failed", e);
+            logger.error("Transaction failed", e);
             if (transaction != null) transaction.rollback();
         }
         return null;

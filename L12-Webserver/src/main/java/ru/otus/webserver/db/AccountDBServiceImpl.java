@@ -13,9 +13,9 @@ import ru.otus.webserver.data.AccountDao;
 
 import java.util.function.Function;
 
-public class AccountDBServiceImpl implements AccountDBService {
+public class AccountDBServiceImpl implements AccountDbService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(AccountDBServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(AccountDBServiceImpl.class);
 
     private SessionFactory sessionFactory;
     private AccountDao accountDataSetDao;
@@ -42,8 +42,8 @@ public class AccountDBServiceImpl implements AccountDBService {
 
     private static SessionFactory createSessionFactory() {
         StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
-            .configure()
-            .build();
+                .configure()
+                .build();
         return new MetadataSources(registry).buildMetadata().buildSessionFactory();
     }
 
@@ -54,8 +54,8 @@ public class AccountDBServiceImpl implements AccountDBService {
             R result = function.apply(session);
             transaction.commit();
             return result;
-        } catch (Exception e){
-            LOG.error("Transaction failed", e);
+        } catch (Exception e) {
+            logger.error("Transaction failed", e);
             if (transaction != null) transaction.rollback();
         }
         return null;

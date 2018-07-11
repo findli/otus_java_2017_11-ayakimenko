@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class StatisticServlet extends HttpServlet {
 
@@ -22,7 +23,7 @@ public class StatisticServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         Object userAttr = req.getSession().getAttribute("user");
-        if (userAttr != null && userAttr.equals("authorised")) {
+        if (Objects.nonNull(userAttr) && userAttr.equals("authorised")) {
             resp.setStatus(HttpStatus.OK_200);
             Map<String, Object> pageVariables = createPageVariablesMap();
 

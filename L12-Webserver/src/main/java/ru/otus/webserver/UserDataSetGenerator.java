@@ -11,9 +11,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class UserDataSetGenerator implements Runnable {
 
     private final CacheDbService dbService;
-
-    private int pauseTime = 1000;
-
+    private int pauseTime = 2000;
     private int userCount = 0;
 
     public UserDataSetGenerator(CacheDbService dbService) {
@@ -22,7 +20,6 @@ public class UserDataSetGenerator implements Runnable {
 
     @Override
     public void run() {
-
         while (true) {
             try {
                 dbService.save(getRandomUser());

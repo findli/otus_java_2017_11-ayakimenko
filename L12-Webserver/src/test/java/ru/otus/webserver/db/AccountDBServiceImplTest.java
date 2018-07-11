@@ -15,7 +15,7 @@ public class AccountDBServiceImplTest {
 
     @Test
     public void shouldAddAccount() throws SQLException {
-        AccountDBService dbService = new AccountDBServiceImpl();
+        AccountDbService dbService = new AccountDBServiceImpl();
         Account accountDataSet = new Account("log", "pass");
 
         dbService.save(accountDataSet);

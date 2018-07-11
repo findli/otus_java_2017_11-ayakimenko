@@ -15,7 +15,7 @@ import java.util.Map;
 
 public class SignUpServlet extends HttpServlet {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SignUpServlet.class);
+    private static final Logger logger = LoggerFactory.getLogger(SignUpServlet.class);
 
     private AccountDBService accountDBService;
 
@@ -32,7 +32,7 @@ public class SignUpServlet extends HttpServlet {
             accountDBService.save(account);
             pageVariables.put("signUpStatus", "Success");
         } catch (SQLException e) {
-            LOG.error("Unable to sign up", e);
+            logger.error("Unable to sign up", e);
             pageVariables.put("signUpStatus", "Failed");
         }
 

@@ -14,7 +14,7 @@ import java.util.HashMap;
 
 public class LoginServlet extends HttpServlet {
 
-    private static final Logger LOG = LoggerFactory.getLogger(LoginServlet.class);
+    private static final Logger logger = LoggerFactory.getLogger(LoginServlet.class);
     private AccountDBService accountDBService;
 
     public LoginServlet(AccountDBService accountDBService) {
@@ -40,7 +40,7 @@ public class LoginServlet extends HttpServlet {
                 return true;
             }
         } catch (SQLException e) {
-            LOG.error("Unable to get account details", e);
+            logger.error("Unable to get account details", e);
         }
         return false;
     }
