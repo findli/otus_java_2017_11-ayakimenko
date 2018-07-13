@@ -1,6 +1,5 @@
 package ru.otus.spring;
 
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -17,27 +16,27 @@ import ru.otus.spring.db.AccountDBServiceImpl;
 @ComponentScan
 public class AppConfig {
 
-    @Bean
-    CacheDbService getCacheDbService(DBService dbService, CacheCore<DataSet> cacheEngine) {
-        return new CacheDbService(dbService, cacheEngine);
-    }
-
-    @Bean
-    UserDataSetGenerator userDataSetGenerator(@Qualifier("getCacheDbService") CacheDbService dbService) {
+    @Bean(name = "userGenerator")
+    UserDataSetGenerator userDataSetGenerator(CacheDbService dbService) {
         return new UserDataSetGenerator(dbService);
     }
 
-    @Bean
+    @Bean(name = "cache")
     CacheCore<DataSet> getCache() {
         return new CacheCoreImpl<>();
     }
 
-    @Bean
+    @Bean(name = "cacheDao")
+    CacheDbService getCacheDbService(DBService dbService, CacheCore<DataSet> cacheEngine) {
+        return new CacheDbService(dbService, cacheEngine);
+    }
+
+    @Bean(name = "accountDao")
     AccountDBService getAccountDbService() {
         return new AccountDBServiceImpl();
     }
 
-    @Bean
+    @Bean(name = "dbService")
     DBService getDbService() {
         return new DBServiceImpl();
     }

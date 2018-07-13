@@ -5,20 +5,25 @@ import org.slf4j.LoggerFactory;
 import ru.otus.spring.data.Account;
 import ru.otus.spring.db.AccountDBService;
 
-import javax.servlet.http.HttpServlet;
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.Objects;
 
-public class LoginServlet extends HttpServlet {
+public class LoginServlet extends BaseServlet {
 
     private static final Logger logger = LoggerFactory.getLogger(LoginServlet.class);
+    
     private AccountDBService accountDBService;
 
-    public LoginServlet(AccountDBService accountDBService) {
-        this.accountDBService = accountDBService;
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+        this.accountDBService = (AccountDBService) getContext().getBean("accountDao");
     }
 
     @Override
@@ -36,7 +41,7 @@ public class LoginServlet extends HttpServlet {
     private boolean validateUser(String login, String pass) {
         try {
             Account account = accountDBService.findByLogin(login);
-            if (account != null && account.getPassword().equals(pass)) {
+            if (Objects.nonNull(account) && account.getPassword().equals(pass)) {
                 return true;
             }
         } catch (SQLException e) {

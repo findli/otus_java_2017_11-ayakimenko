@@ -5,7 +5,8 @@ import org.slf4j.LoggerFactory;
 import ru.otus.spring.data.Account;
 import ru.otus.spring.db.AccountDBService;
 
-import javax.servlet.http.HttpServlet;
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -13,14 +14,16 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SignUpServlet extends HttpServlet {
+public class SignUpServlet extends BaseServlet {
 
     private static final Logger logger = LoggerFactory.getLogger(SignUpServlet.class);
 
     private AccountDBService accountDBService;
 
-    public SignUpServlet(AccountDBService accountDBService) {
-        this.accountDBService = accountDBService;
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+        this.accountDBService = (AccountDBService) getContext().getBean("accountDao");
     }
 
     @Override

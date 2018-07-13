@@ -4,7 +4,8 @@ import org.eclipse.jetty.http.HttpStatus;
 import ru.otus.cache.CacheCore;
 import ru.otus.hibernate.domain.DataSet;
 
-import javax.servlet.http.HttpServlet;
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -12,12 +13,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public class StatisticServlet extends HttpServlet {
+public class StatisticServlet extends BaseServlet {
 
-    private final CacheCore<DataSet> cache;
-
-    public StatisticServlet(CacheCore<DataSet> cacheEngine) {
-        this.cache = cacheEngine;
+    private CacheCore<DataSet> cache;
+    
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+        this.cache = (CacheCore<DataSet>) getContext().getBean("cache");
     }
 
     @Override
