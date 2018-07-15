@@ -3,14 +3,10 @@ package ru.otus.spring;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import ru.otus.cache.CacheCore;
-import ru.otus.cache.CacheCoreImpl;
-import ru.otus.cache.db.CacheDbService;
-import ru.otus.hibernate.domain.DataSet;
-import ru.otus.hibernate.service.DBService;
-import ru.otus.hibernate.service.DBServiceImpl;
-import ru.otus.spring.db.AccountDBService;
-import ru.otus.spring.db.AccountDBServiceImpl;
+import ru.otus.spring.cache.CacheCore;
+import ru.otus.spring.cache.CacheCoreImpl;
+import ru.otus.spring.db.*;
+import ru.otus.spring.domain.DataSet;
 
 @Configuration
 @ComponentScan

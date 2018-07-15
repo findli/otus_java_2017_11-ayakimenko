@@ -8,8 +8,8 @@ import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.otus.spring.data.Account;
-import ru.otus.spring.data.AccountDao;
+import ru.otus.spring.domain.Account;
+import ru.otus.spring.domain.AccountDao;
 
 import java.util.function.Function;
 

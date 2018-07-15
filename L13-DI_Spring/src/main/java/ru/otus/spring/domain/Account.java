@@ -1,9 +1,8 @@
-package ru.otus.spring.data;
+package ru.otus.spring.domain;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ru.otus.hibernate.domain.DataSet;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

@@ -2,7 +2,7 @@ package ru.otus.spring.server;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.otus.spring.data.Account;
+import ru.otus.spring.domain.Account;
 import ru.otus.spring.db.AccountDBService;
 
 import javax.servlet.ServletConfig;

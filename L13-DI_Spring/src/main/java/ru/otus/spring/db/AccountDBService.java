@@ -1,7 +1,7 @@
 package ru.otus.spring.db;
 
 
-import ru.otus.spring.data.Account;
+import ru.otus.spring.domain.Account;
 
 import java.sql.SQLException;
 

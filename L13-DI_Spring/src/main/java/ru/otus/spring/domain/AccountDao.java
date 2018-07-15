@@ -1,4 +1,4 @@
-package ru.otus.spring.data;
+package ru.otus.spring.domain;
 
 import org.hibernate.Session;
 

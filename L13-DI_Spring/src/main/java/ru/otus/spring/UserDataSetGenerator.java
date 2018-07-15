@@ -1,8 +1,8 @@
 package ru.otus.spring;
 
 import org.kohsuke.randname.RandomNameGenerator;
-import ru.otus.cache.db.CacheDbService;
-import ru.otus.hibernate.domain.UserDataSet;
+import ru.otus.spring.db.CacheDbService;
+import ru.otus.spring.domain.UserDataSet;
 
 import java.sql.SQLException;
 import java.util.concurrent.ThreadLocalRandom;
@@ -21,7 +21,8 @@ public class UserDataSetGenerator implements Runnable {
     public void run() {
         while (true) {
             try {
-                dbService.save(getRandomUser());
+                UserDataSet user = getRandomUser();
+                dbService.save(user);
                 userCount++;
                 dbService.findById(ThreadLocalRandom.current().nextInt(0, userCount + 1));
             } catch (SQLException e) {

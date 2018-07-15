@@ -1,8 +1,8 @@
 package ru.otus.spring.server;
 
 import org.eclipse.jetty.http.HttpStatus;
-import ru.otus.cache.CacheCore;
-import ru.otus.hibernate.domain.DataSet;
+import ru.otus.spring.cache.CacheCore;
+import ru.otus.spring.domain.DataSet;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -16,8 +16,9 @@ import java.util.Objects;
 public class StatisticServlet extends BaseServlet {
 
     private CacheCore<DataSet> cache;
-    
+
     @Override
+    @SuppressWarnings("unchecked")
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         this.cache = (CacheCore<DataSet>) getContext().getBean("cache");

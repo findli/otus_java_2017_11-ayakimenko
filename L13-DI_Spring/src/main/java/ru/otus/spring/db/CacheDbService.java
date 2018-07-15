@@ -1,10 +1,10 @@
-package ru.otus.cache.db;
+package ru.otus.spring.db;
 
-import ru.otus.cache.CacheCore;
-import ru.otus.cache.CacheKey;
-import ru.otus.hibernate.domain.DataSet;
-import ru.otus.hibernate.domain.UserDataSet;
-import ru.otus.hibernate.service.DBService;
+
+import ru.otus.spring.cache.CacheCore;
+import ru.otus.spring.cache.CacheKey;
+import ru.otus.spring.domain.DataSet;
+import ru.otus.spring.domain.UserDataSet;
 
 import java.sql.SQLException;
 import java.util.List;
